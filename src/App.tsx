@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import type { AppConfig } from './state/store'
-import { DEFAULT_CONFIG } from './state/store'
 import { getScenario } from './state/scenarios'
+import { loadConfigFromUrl, syncConfigToUrl } from './state/url'
 import { Controls } from './ui/controls/Controls'
 import { ChallengePanel } from './ui/ChallengePanel'
 import { HeadToHead } from './ui/modes/HeadToHead'
@@ -11,9 +11,25 @@ import { Heatmap } from './ui/modes/Heatmap'
 type Tab = 'h2h' | 'heatmap'
 
 function App() {
-  const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG)
+  const [config, setConfig] = useState<AppConfig>(() => loadConfigFromUrl())
   const [tab, setTab] = useState<Tab>('h2h')
+  const [copied, setCopied] = useState(false)
   const scenario = getScenario(config.scenarioId)
+
+  useEffect(() => {
+    syncConfigToUrl(config)
+  }, [config])
+
+  const share = async () => {
+    syncConfigToUrl(config)
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      // 클립보드 불가 환경 무시
+    }
+  }
 
   return (
     <div className="app">
@@ -24,8 +40,13 @@ function App() {
         <ChallengePanel config={config} />
       </aside>
       <main className="stage">
-        <div className="scenario-banner">
-          <strong>{scenario.name}</strong> · {scenario.blurb}
+        <div className="topbar">
+          <div className="scenario-banner">
+            <strong>{scenario.name}</strong> · {scenario.blurb}
+          </div>
+          <button className="share" onClick={share} aria-label="현재 설정을 URL로 복사">
+            {copied ? '복사됨' : '공유 링크'}
+          </button>
         </div>
         <nav className="tabs">
           <button

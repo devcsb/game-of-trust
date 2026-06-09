@@ -4,6 +4,28 @@ import { STANDARD_PAYOFF } from '../core/payoff'
 import { createGameRunner, computeStars } from '../sim/gameRunner'
 import type { GameRoundResult } from '../sim/gameRunner'
 import type { Stage } from '../game/stages'
+import { opponentMood } from '../game/mood'
+import { trustFromHistory } from '../game/trust'
+import { comboCount } from '../game/combo'
+import { play as soundPlay, resumeAudio } from '../audio/sound'
+import { Avatar } from './Avatar'
+import type { AvatarKind } from './Avatar'
+import type { StrategyId } from '../core/strategy/Strategy'
+import { ScoreBar } from './ScoreBar'
+import { TrustGauge } from './TrustGauge'
+import { ClashStage } from './ClashStage'
+import { FloatingPoints } from './FloatingPoints'
+
+const KIND_BY_OPPONENT: Record<StrategyId, AvatarKind> = {
+  allc: 'sucker',
+  alld: 'villain',
+  tft: 'mirror',
+  grudger: 'grudger',
+  gtft: 'generous',
+  random: 'mirror',
+  tf2t: 'generous',
+  pavlov: 'mirror',
+}
 
 function randomSeed(): number {
   return Math.floor(Math.random() * 1_000_000_000)
@@ -30,7 +52,12 @@ export function GamePlay({
   onQuit,
 }: {
   stage: Stage
-  onComplete: (r: { stars: number; score: number; flips: number }) => void
+  onComplete: (r: {
+    stars: number
+    score: number
+    flips: number
+    opponentScore: number
+  }) => void
   onQuit: () => void
 }) {
   const [runner] = useState(() =>
@@ -48,18 +75,29 @@ export function GamePlay({
   const last = history.length > 0 ? history[history.length - 1] : null
   const done = runner.done
   const current = done ? stage.rounds : runner.round + 1
+  const trust = trustFromHistory(history)
+  const combo = comboCount(history)
+  const mood = opponentMood(last)
+  const kind = KIND_BY_OPPONENT[stage.opponentId]
 
   const play = (m: Move) => {
     if (runner.done) return
+    resumeAudio()
+    const prevCombo = comboCount(history)
     const r = runner.playRound(m)
-    setHistory((h) => [...h, r])
+    const next = [...history, r]
+    setHistory(next)
+    const cc = r.playerPlayed === 'C' && r.opponentPlayed === 'C'
+    soundPlay(cc ? 'coop' : 'defect')
+    const newCombo = comboCount(next)
+    if (newCombo >= 2 && newCombo > prevCombo) soundPlay('combo')
   }
 
   const finish = () => {
     const score = runner.playerScore
     const stars = computeStars(score, stage.starThresholds)
     const flips = history.filter((x) => x.playerMoveFlipped).length
-    onComplete({ stars, score, flips })
+    onComplete({ stars, score, flips, opponentScore: runner.opponentScore })
   }
 
   return (
@@ -74,21 +112,30 @@ export function GamePlay({
       </div>
 
       <div className="card opp-card">
-        <span className="glyph big">{stage.character.glyph}</span>
+        <Avatar kind={kind} mood={mood} />
         <span className="opp-name">{stage.character.name}</span>
         <span className="opp-blurb">{stage.character.blurb}</span>
+        {last && (
+          <span className="fp-anchor" key={last.round}>
+            <FloatingPoints amount={last.payoff[0]} />
+          </span>
+        )}
       </div>
 
-      <div className="scoreboard">
-        <div className="sb me">
-          <span>나</span>
-          <strong>{runner.playerScore}</strong>
+      {last && (
+        <div key={last.round}>
+          <ClashStage me={last.playerPlayed} op={last.opponentPlayed} />
         </div>
-        <div className="sb opp">
-          <span>{stage.character.name}</span>
-          <strong>{runner.opponentScore}</strong>
+      )}
+
+      <ScoreBar me={runner.playerScore} opp={runner.opponentScore} oppName={stage.character.name} />
+      <TrustGauge trust={trust} />
+
+      {combo >= 2 && (
+        <div className="combo-badge" key={combo}>
+          🔥 {combo} 콤보
         </div>
-      </div>
+      )}
 
       {last && (
         <div className="round-feedback">

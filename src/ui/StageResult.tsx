@@ -1,11 +1,15 @@
+import { useEffect } from 'react'
 import type { Stage } from '../game/stages'
 import { StarRow } from './StarRow'
+import { matchOutcome, OUTCOME_LABEL } from '../game/outcome'
+import { play as soundPlay } from '../audio/sound'
 
 export function StageResult({
   stage,
   stars,
   score,
   flips,
+  opponentScore,
   isFinal,
   onRetry,
   onMap,
@@ -15,24 +19,39 @@ export function StageResult({
   stars: number
   score: number
   flips: number
+  opponentScore: number
   isFinal?: boolean
   onRetry: () => void
   onMap: () => void
   onNext?: () => void
 }) {
   const cleared = stars >= 1
+  const outcome = matchOutcome(score, opponentScore)
   const title = isFinal
     ? '🎉 모든 상대 클리어!'
     : cleared
       ? `${stage.character.name} 클리어`
       : '아쉬워요'
 
+  useEffect(() => {
+    soundPlay(outcome === 'lose' ? 'lose' : 'win')
+    if (stars > 0) {
+      const t = setTimeout(() => soundPlay('star'), 280)
+      return () => clearTimeout(t)
+    }
+  }, [outcome, stars])
+
   return (
     <div className="screen center">
-      <div className="card result-card">
+      <div className={`card result-card${outcome !== 'lose' ? ' victory' : ''}`}>
         <h2>{title}</h2>
-        <StarRow stars={stars} />
-        <p className="result-score">점수 {score}</p>
+        <div className={`outcome-badge outcome-${outcome}`}>{OUTCOME_LABEL[outcome]}</div>
+        <div className="result-stars">
+          <StarRow stars={stars} animate />
+        </div>
+        <p className="result-score">
+          나 {score} : {opponentScore} {stage.character.name}
+        </p>
         {stage.executionNoise > 0 && <p className="result-flips">통신 오류 {flips}회</p>}
         <p className="lesson">{stage.lesson}</p>
         {isFinal && (

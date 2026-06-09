@@ -1,74 +1,64 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
-import type { AppConfig } from './state/store'
-import { getScenario } from './state/scenarios'
-import { loadConfigFromUrl, syncConfigToUrl } from './state/url'
-import { Controls } from './ui/controls/Controls'
-import { ChallengePanel } from './ui/ChallengePanel'
-import { HeadToHead } from './ui/modes/HeadToHead'
-import { Heatmap } from './ui/modes/Heatmap'
+import { STAGES, stageById } from './game/stages'
+import type { ProgressMap } from './game/progress'
+import { loadProgress, saveProgress, recordStageResult } from './game/progress'
+import { TitleScreen } from './ui/TitleScreen'
+import { StageMap } from './ui/StageMap'
+import { GamePlay } from './ui/GamePlay'
+import { StageResult } from './ui/StageResult'
 
-type Tab = 'h2h' | 'heatmap'
+type Screen =
+  | { name: 'title' }
+  | { name: 'map' }
+  | { name: 'play'; stageId: string }
+  | { name: 'result'; stageId: string; stars: number; score: number; flips: number }
 
 function App() {
-  const [config, setConfig] = useState<AppConfig>(() => loadConfigFromUrl())
-  const [tab, setTab] = useState<Tab>('h2h')
-  const [copied, setCopied] = useState(false)
-  const scenario = getScenario(config.scenarioId)
+  const [screen, setScreen] = useState<Screen>({ name: 'title' })
+  const [progress, setProgress] = useState<ProgressMap>(() => loadProgress())
 
-  useEffect(() => {
-    syncConfigToUrl(config)
-  }, [config])
-
-  const share = async () => {
-    syncConfigToUrl(config)
-    try {
-      await navigator.clipboard.writeText(window.location.href)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
-    } catch {
-      // 클립보드 불가 환경 무시
-    }
+  if (screen.name === 'title') {
+    return <TitleScreen onStart={() => setScreen({ name: 'map' })} />
   }
 
+  if (screen.name === 'map') {
+    return <StageMap progress={progress} onSelect={(id) => setScreen({ name: 'play', stageId: id })} />
+  }
+
+  if (screen.name === 'play') {
+    const stage = stageById(screen.stageId)!
+    return (
+      <GamePlay
+        key={stage.id}
+        stage={stage}
+        onQuit={() => setScreen({ name: 'map' })}
+        onComplete={({ stars, score, flips }) => {
+          const next = recordStageResult(progress, stage.id, stars, score)
+          setProgress(next)
+          saveProgress(next)
+          setScreen({ name: 'result', stageId: stage.id, stars, score, flips })
+        }}
+      />
+    )
+  }
+
+  // result
+  const stage = stageById(screen.stageId)!
+  const idx = stage.index
+  const hasNext = idx + 1 < STAGES.length
+  const canAdvance = hasNext && screen.stars >= 1
   return (
-    <div className="app">
-      <aside className="panel">
-        <h1 className="title">IPD 협력 시뮬레이터</h1>
-        <p className="subtitle">반복 죄수의 딜레마에서 관용이 언제 이기는가</p>
-        <Controls config={config} onChange={setConfig} />
-        <ChallengePanel config={config} />
-      </aside>
-      <main className="stage">
-        <div className="topbar">
-          <div className="scenario-banner">
-            <strong>{scenario.name}</strong> · {scenario.blurb}
-          </div>
-          <button className="share" onClick={share} aria-label="현재 설정을 URL로 복사">
-            {copied ? '복사됨' : '공유 링크'}
-          </button>
-        </div>
-        <nav className="tabs">
-          <button
-            className={tab === 'h2h' ? 'tab active' : 'tab'}
-            onClick={() => setTab('h2h')}
-          >
-            1:1 대결
-          </button>
-          <button
-            className={tab === 'heatmap' ? 'tab active' : 'tab'}
-            onClick={() => setTab('heatmap')}
-          >
-            히트맵
-          </button>
-        </nav>
-        {tab === 'h2h' ? (
-          <HeadToHead config={config} />
-        ) : (
-          <Heatmap config={config} />
-        )}
-      </main>
-    </div>
+    <StageResult
+      stage={stage}
+      stars={screen.stars}
+      score={screen.score}
+      flips={screen.flips}
+      isFinal={!hasNext && screen.stars >= 1}
+      onRetry={() => setScreen({ name: 'play', stageId: stage.id })}
+      onMap={() => setScreen({ name: 'map' })}
+      onNext={canAdvance ? () => setScreen({ name: 'play', stageId: STAGES[idx + 1].id }) : undefined}
+    />
   )
 }
 

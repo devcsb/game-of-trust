@@ -4,6 +4,7 @@ import type { AppConfig } from './state/store'
 import { DEFAULT_CONFIG } from './state/store'
 import { Controls } from './ui/controls/Controls'
 import { HeadToHead } from './ui/modes/HeadToHead'
+import { Heatmap } from './ui/modes/Heatmap'
 
 type Tab = 'h2h' | 'heatmap'
 
@@ -33,11 +34,7 @@ function App() {
             히트맵
           </button>
         </nav>
-        {tab === 'h2h' ? (
-          <HeadToHead config={config} />
-        ) : (
-          <div className="placeholder">히트맵(noise × 관용도)은 다음 단계에서 추가됩니다.</div>
-        )}
+        {tab === 'h2h' ? <HeadToHead config={config} /> : <Heatmap config={config} />}
       </main>
     </div>
   )

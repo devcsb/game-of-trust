@@ -196,6 +196,67 @@
   display: block;
 }
 
+.heatmap-mode {
+  max-width: 560px;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0 0 14px;
+}
+
+.heatmap-wrap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.heatmap {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.axis-y-top,
+.axis-y-bot {
+  font-size: 11px;
+  color: var(--text);
+}
+
+.axis-x {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  margin: 12px 0;
+  font-size: 12px;
+}
+
+.legend .lg::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.legend .dash::before {
+  border-top: 2px dashed #fff;
+}
+
+.legend .solid::before {
+  border-top: 3px solid #ff3b6b;
+}
+
 @media (max-width: 760px) {
   .app {
     flex-direction: column;

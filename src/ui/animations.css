@@ -136,6 +136,47 @@
   animation: victory-flash 1.2s ease;
 }
 
+/* === 자원 교환 연출 (ExchangeStage) === */
+@keyframes orb-l-to-c {
+  0% { opacity: 1; transform: translateX(0); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(84px); }
+}
+@keyframes orb-r-to-c {
+  0% { opacity: 1; transform: translateX(0); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-84px); }
+}
+@keyframes orb-steal-left {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0.2; transform: translateX(-168px); }
+}
+@keyframes orb-steal-right {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0.2; transform: translateX(168px); }
+}
+@keyframes pool-grow {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+@keyframes pool-break {
+  0% { transform: scale(1) translateX(0); }
+  30% { transform: scale(1.1) translateX(-2px); }
+  60% { transform: scale(0.9) translateX(2px); }
+  100% { transform: scale(0.85); }
+}
+
+.ex-orb { opacity: 0; }
+.ex-share .ex-orb-l { animation: orb-l-to-c 0.6s ease forwards; }
+.ex-share .ex-orb-r { animation: orb-r-to-c 0.6s ease forwards; }
+.ex-share .ex-pool { animation: pool-grow 0.5s ease; transform-box: fill-box; transform-origin: center; }
+.ex-takeL .ex-orb-r { animation: orb-steal-left 0.55s ease forwards; }
+.ex-takeR .ex-orb-l { animation: orb-steal-right 0.55s ease forwards; }
+.ex-collapse .ex-pool { animation: pool-break 0.5s ease; transform-box: fill-box; transform-origin: center; }
+.ex-collapse .ex-orb-l { animation: orb-steal-right 0.4s ease forwards; }
+.ex-collapse .ex-orb-r { animation: orb-steal-left 0.4s ease forwards; }
+
 @media (prefers-reduced-motion: reduce) {
   .float-points,
   .fx-shake,
@@ -146,7 +187,12 @@
   .hand-r,
   .clash-fx.burst,
   .clash-fx.ok,
-  .victory {
+  .victory,
+  .cell-fresh .leaf,
+  .ex-orb,
+  .ex-share .ex-pool,
+  .ex-collapse .ex-pool {
     animation: none !important;
   }
+  .ex-orb { opacity: 1; }
 }

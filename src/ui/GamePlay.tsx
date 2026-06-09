@@ -7,14 +7,17 @@ import type { Stage } from '../game/stages'
 import { opponentMood } from '../game/mood'
 import { trustFromHistory } from '../game/trust'
 import { comboCount } from '../game/combo'
+import { worldFromHistory, worldTone } from '../game/world'
+import { welfareMessage } from '../game/welfareMessage'
 import { play as soundPlay, resumeAudio } from '../audio/sound'
 import { Avatar } from './Avatar'
 import type { AvatarKind } from './Avatar'
 import type { StrategyId } from '../core/strategy/Strategy'
-import { ScoreBar } from './ScoreBar'
 import { TrustGauge } from './TrustGauge'
-import { ClashStage } from './ClashStage'
+import { ExchangeStage } from './ExchangeStage'
 import { FloatingPoints } from './FloatingPoints'
+import { WelfareHud } from './WelfareHud'
+import { GardenWorld } from './GardenWorld'
 
 const KIND_BY_OPPONENT: Record<StrategyId, AvatarKind> = {
   allc: 'sucker',
@@ -57,6 +60,7 @@ export function GamePlay({
     score: number
     flips: number
     opponentScore: number
+    welfare: number
   }) => void
   onQuit: () => void
 }) {
@@ -79,6 +83,8 @@ export function GamePlay({
   const combo = comboCount(history)
   const mood = opponentMood(last)
   const kind = KIND_BY_OPPONENT[stage.opponentId]
+  const world = worldFromHistory(history)
+  const msg = last ? welfareMessage(last) : null
 
   const play = (m: Move) => {
     if (runner.done) return
@@ -97,7 +103,13 @@ export function GamePlay({
     const score = runner.playerScore
     const stars = computeStars(score, stage.starThresholds)
     const flips = history.filter((x) => x.playerMoveFlipped).length
-    onComplete({ stars, score, flips, opponentScore: runner.opponentScore })
+    onComplete({
+      stars,
+      score,
+      flips,
+      opponentScore: runner.opponentScore,
+      welfare: world.totalWelfare,
+    })
   }
 
   return (
@@ -124,11 +136,23 @@ export function GamePlay({
 
       {last && (
         <div key={last.round}>
-          <ClashStage me={last.playerPlayed} op={last.opponentPlayed} />
+          <ExchangeStage
+            me={last.playerPlayed}
+            op={last.opponentPlayed}
+            delta={last.payoff[0] + last.payoff[1]}
+          />
         </div>
       )}
 
-      <ScoreBar me={runner.playerScore} opp={runner.opponentScore} oppName={stage.character.name} />
+      <WelfareHud
+        total={world.totalWelfare}
+        goal={stage.welfareGoal}
+        lost={world.lostWelfare}
+        me={runner.playerScore}
+        opp={runner.opponentScore}
+        oppName={stage.character.name}
+      />
+      <GardenWorld cells={world.cells} tone={worldTone(world.bloomRatio)} totalRounds={stage.rounds} />
       <TrustGauge trust={trust} />
 
       {combo >= 2 && (
@@ -137,19 +161,15 @@ export function GamePlay({
         </div>
       )}
 
-      {last && (
-        <div className="round-feedback">
+      {last && msg && (
+        <div className={`round-feedback tone-${msg.tone}`}>
           {last.playerMoveFlipped && (
             <div className="flip-badge">
               📡 통신 오류! 내 "{moveLabel(last.playerIntended)}"가 "
               {moveLabel(last.playerPlayed)}"로 전달됐어요
             </div>
           )}
-          <div className="rf-row">
-            <span>나: {moveLabel(last.playerPlayed)}</span>
-            <span>상대: {moveLabel(last.opponentPlayed)}</span>
-            <span className="pts">+{last.payoff[0]}</span>
-          </div>
+          <div className="welfare-headline">{msg.headline}</div>
         </div>
       )}
 

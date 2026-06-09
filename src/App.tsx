@@ -20,6 +20,7 @@ type Screen =
       score: number
       flips: number
       opponentScore: number
+      welfare: number
     }
 
 function App() {
@@ -45,11 +46,19 @@ function App() {
           key={stage.id}
           stage={stage}
           onQuit={() => setScreen({ name: 'map' })}
-          onComplete={({ stars, score, flips, opponentScore }) => {
+          onComplete={({ stars, score, flips, opponentScore, welfare }) => {
             const next = recordStageResult(progress, stage.id, stars, score)
             setProgress(next)
             saveProgress(next)
-            setScreen({ name: 'result', stageId: stage.id, stars, score, flips, opponentScore })
+            setScreen({
+              name: 'result',
+              stageId: stage.id,
+              stars,
+              score,
+              flips,
+              opponentScore,
+              welfare,
+            })
           }}
         />
       )
@@ -65,6 +74,7 @@ function App() {
         score={screen.score}
         flips={screen.flips}
         opponentScore={screen.opponentScore}
+        welfare={screen.welfare}
         isFinal={!hasNext && screen.stars >= 1}
         onRetry={() => setScreen({ name: 'play', stageId: stage.id })}
         onMap={() => setScreen({ name: 'map' })}

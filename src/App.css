@@ -502,3 +502,220 @@
   cursor: pointer;
   font-size: 16px;
 }
+
+/* --- 공동 파이 HUD --- */
+.welfare {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.welfare-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.welfare-label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.welfare-total {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--coop);
+}
+
+.welfare-goal {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.welfare-track {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.welfare-fill {
+  height: 100%;
+  background: var(--coop);
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.welfare-fill.reached {
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+
+.welfare-note {
+  font-size: 12px;
+  color: var(--defect);
+}
+
+.welfare-sub {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.welfare-lost {
+  color: var(--defect);
+}
+
+/* --- 공동 정원 --- */
+.garden {
+  display: block;
+  margin: 2px 0;
+}
+
+.garden-ground {
+  fill: #2a241c;
+  transition: fill 0.6s ease;
+}
+
+.garden.tone-reviving .garden-ground {
+  fill: #2f3322;
+}
+
+.garden.tone-thriving .garden-ground {
+  fill: #2b3a24;
+}
+
+.garden.tone-flourishing .garden-ground {
+  fill: #2c4a2a;
+}
+
+.garden .leaf {
+  fill: var(--coop);
+}
+
+.garden .stem {
+  stroke: #6b7280;
+  stroke-width: 2;
+}
+
+.garden .stem-wilt {
+  stroke: #c79a3a;
+  stroke-width: 2;
+}
+
+.garden .barren-dot {
+  fill: #5b5048;
+}
+
+.garden .cell-ghost {
+  fill: #463d34;
+}
+
+.cell-fresh .leaf {
+  animation: leaf-pop 0.42s ease;
+}
+
+/* --- 라운드 피드백 톤 --- */
+.welfare-headline {
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.round-feedback.tone-bloom {
+  border-left: 3px solid var(--coop);
+}
+
+.round-feedback.tone-leak {
+  border-left: 3px solid #fbbf24;
+}
+
+.round-feedback.tone-collapse {
+  border-left: 3px solid var(--defect);
+}
+
+/* --- 결과 배지 (파이 목표) --- */
+.welfare-achieved {
+  background: rgba(52, 211, 153, 0.18);
+  color: var(--coop);
+}
+
+.welfare-close {
+  background: rgba(251, 191, 36, 0.18);
+  color: #fbbf24;
+}
+
+.welfare-missed {
+  background: rgba(248, 113, 113, 0.18);
+  color: var(--defect);
+}
+
+.welfare-defense {
+  background: rgba(156, 163, 175, 0.18);
+  color: #9ca3af;
+}
+
+/* --- 자원 교환 연출 --- */
+.exchange {
+  display: block;
+  margin: 2px 0;
+}
+
+.ex-node-me {
+  fill: var(--line-a);
+}
+
+.ex-node-op {
+  fill: #fbbf24;
+}
+
+.ex-link {
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.ex-share .ex-link {
+  stroke: var(--coop);
+}
+
+.ex-takeL .ex-link,
+.ex-takeR .ex-link,
+.ex-collapse .ex-link {
+  stroke: var(--defect);
+  stroke-dasharray: 4 5;
+}
+
+.ex-pool {
+  fill: rgba(52, 211, 153, 0.25);
+  stroke: var(--coop);
+  stroke-width: 2;
+  transition: r 0.4s ease;
+}
+
+.ex-takeL .ex-pool,
+.ex-takeR .ex-pool {
+  fill: rgba(251, 191, 36, 0.2);
+  stroke: #fbbf24;
+}
+
+.ex-collapse .ex-pool {
+  fill: rgba(248, 113, 113, 0.2);
+  stroke: var(--defect);
+}
+
+.ex-pool-num {
+  fill: var(--text-h);
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.ex-orb {
+  fill: var(--coop);
+}
+
+.ex-takeL .ex-orb,
+.ex-takeR .ex-orb,
+.ex-collapse .ex-orb {
+  fill: var(--defect);
+}

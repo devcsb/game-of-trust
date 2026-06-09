@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import type { AppConfig } from '../../state/store'
 import { STRATEGY_LABELS } from '../../state/store'
+import { getScenario } from '../../state/scenarios'
 import { runMatch } from '../../sim/match'
 import { mulberry32 } from '../../core/rng'
 import { Timeline } from '../viz/Timeline'
@@ -23,6 +24,7 @@ export function HeadToHead({ config }: { config: AppConfig }) {
     )
   }, [config])
 
+  const scenario = getScenario(config.scenarioId)
   const avgA = outcome.avgPerRound[0].toFixed(2)
   const avgB = outcome.avgPerRound[1].toFixed(2)
 
@@ -41,7 +43,9 @@ export function HeadToHead({ config }: { config: AppConfig }) {
         </div>
       </div>
 
-      <h3 className="viz-title">라운드 타임라인 (위 A, 아래 B · 초록 협력, 빨강 배신)</h3>
+      <h3 className="viz-title">
+        라운드 타임라인 (위 A, 아래 B · 초록 {scenario.coop}, 빨강 {scenario.defect})
+      </h3>
       <Timeline rounds={outcome.rounds} />
 
       <h3 className="viz-title">누적 점수 (파랑 A, 노랑 B)</h3>

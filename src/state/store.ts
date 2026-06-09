@@ -3,6 +3,7 @@ import type { StrategyId } from '../core/strategy/Strategy'
 import { STANDARD_PAYOFF } from '../core/payoff'
 
 export interface AppConfig {
+  scenarioId: string
   strategyA: StrategyId
   strategyB: StrategyId
   generosity: number
@@ -14,6 +15,7 @@ export interface AppConfig {
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
+  scenarioId: 'abstract',
   strategyA: 'tft',
   strategyB: 'tft',
   generosity: 1 / 3,

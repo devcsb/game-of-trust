@@ -3,6 +3,7 @@ import { STRATEGY_LABELS } from '../../state/store'
 import { STRATEGY_IDS } from '../../core/strategy/registry'
 import type { StrategyId } from '../../core/strategy/Strategy'
 import { isValidPayoff } from '../../core/payoff'
+import { SCENARIOS, getScenario } from '../../state/scenarios'
 
 interface Props {
   config: AppConfig
@@ -58,9 +59,24 @@ export function Controls({ config, onChange }: Props) {
 
   const valid = isValidPayoff(config.payoff)
   const usesGtft = config.strategyA === 'gtft' || config.strategyB === 'gtft'
+  const scenario = getScenario(config.scenarioId)
 
   return (
     <div className="controls">
+      <label className="ctl">
+        <span className="ctl-label">시나리오</span>
+        <select
+          value={config.scenarioId}
+          onChange={(e) => set('scenarioId', e.target.value)}
+        >
+          {SCENARIOS.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
       <label className="ctl">
         <span className="ctl-label">전략 A</span>
         <select
@@ -90,7 +106,7 @@ export function Controls({ config, onChange }: Props) {
       </label>
 
       <Slider
-        label={`실행 노이즈 ${pct(config.executionNoise)}`}
+        label={`${scenario.noiseLabel} ${pct(config.executionNoise)}`}
         min={0}
         max={0.5}
         step={0.01}

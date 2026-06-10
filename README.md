@@ -2,7 +2,7 @@
 
 반복 죄수의 딜레마를 캐릭터와 대결하며 배우는 미니 게임. 협력과 배신, 통신 오류, 그리고 "왜 협력이 세상 전체에 이로운가"를 직접 플레이하며 깨닫는다. 서버 없이 브라우저에서 전부 계산하고 GitHub Pages로 배포된다.
 
-플레이: https://devcsb.github.io/ipd-sim/
+플레이: https://devcsb.github.io/game-of-trust/
 
 ## 어떤 게임인가
 
@@ -52,7 +52,7 @@ tests/      67개 (도메인 회귀 + 게임 파생 로직 + 진화/분석)
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/ipd-sim/
+npm run dev        # http://localhost:5173/game-of-trust/
 npm run test:run   # 회귀 + 게임 로직 테스트
 npm run build      # dist/ 정적 빌드
 ```

@@ -1,4 +1,8 @@
+import { useHotkeys } from './useHotkeys'
+
 export function RulesModal({ onClose }: { onClose: () => void }) {
+  useHotkeys({ escape: onClose, enter: onClose })
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal card" onClick={(e) => e.stopPropagation()}>
@@ -34,7 +38,7 @@ export function RulesModal({ onClose }: { onClose: () => void }) {
         </p>
         <div className="actions">
           <button className="btn primary" onClick={onClose}>
-            알겠어요
+            알겠어요 <kbd className="kbd-hint">Enter</kbd>
           </button>
         </div>
       </div>

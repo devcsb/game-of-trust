@@ -5,6 +5,7 @@ import { welfareOutcome, WELFARE_LABEL } from '../game/outcome'
 import type { PlayAnalysis } from '../game/analysis'
 import { STYLE_LABEL, STYLE_BLURB } from '../game/analysis'
 import { play as soundPlay } from '../audio/sound'
+import { useHotkeys } from './useHotkeys'
 
 export function StageResult({
   stage,
@@ -49,6 +50,13 @@ export function StageResult({
     }
   }, [cleared, stars])
 
+  // 키보드: Enter 다음(또는 진화/지도), R 다시, M 지도
+  useHotkeys({
+    enter: onNext ?? onEvolution ?? onMap,
+    r: onRetry,
+    m: onMap,
+  })
+
   return (
     <div className="screen center">
       <div className={`card result-card${triumphant ? ' victory' : ''}`}>
@@ -74,6 +82,15 @@ export function StageResult({
               내 플레이: {STYLE_LABEL[analysis.style]} · 협력 {Math.round(analysis.coopRate * 100)}%
             </span>
             <span className="analysis-blurb">{STYLE_BLURB[analysis.style]}</span>
+            {analysis.readAccuracy !== null && (
+              <span className="analysis-read">
+                🔮 읽기 정확도 {Math.round(analysis.readAccuracy * 100)}%
+                {analysis.bestStreak >= 2 && <> · 최고 연속 간파 {analysis.bestStreak}</>}
+                {analysis.readAccuracy >= 0.8 && analysis.rounds >= 5 && (
+                  <span className="mindreader-badge"> 독심술사!</span>
+                )}
+              </span>
+            )}
           </div>
         )}
 
@@ -91,19 +108,19 @@ export function StageResult({
 
         <div className="actions">
           <button className="btn ghost" onClick={onRetry}>
-            다시
+            다시 <kbd className="kbd-hint">R</kbd>
           </button>
           <button className="btn ghost" onClick={onMap}>
-            지도
+            지도 <kbd className="kbd-hint">M</kbd>
           </button>
           {onNext && (
             <button className="btn primary" onClick={onNext}>
-              다음
+              다음 <kbd className="kbd-hint">Enter</kbd>
             </button>
           )}
           {onEvolution && (
             <button className="btn primary" onClick={onEvolution}>
-              진화 토너먼트 보기
+              진화의 정원 <kbd className="kbd-hint">Enter</kbd>
             </button>
           )}
         </div>

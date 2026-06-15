@@ -54,6 +54,36 @@
   transition: transform 0.05s ease, filter 0.15s ease;
 }
 
+/* --- 키보드 접근성 --- */
+.btn:focus-visible,
+.chip:focus-visible,
+.rule-card:focus-visible,
+.glyph-btn:focus-visible,
+.stage-card:focus-visible,
+.mute-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+kbd.kbd-hint {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  opacity: 0.55;
+  vertical-align: 1px;
+}
+
+/* 터치 전용 기기에선 키보드 힌트를 숨긴다 */
+@media (hover: none) and (pointer: coarse) {
+  kbd.kbd-hint {
+    display: none;
+  }
+}
+
 .btn:hover {
   filter: brightness(1.08);
 }
@@ -854,4 +884,1037 @@
   font-size: 13px;
   line-height: 1.5;
   margin: 0;
+}
+
+/* --- 예측 단계 --- */
+.predict-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.predict-q {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.predict-btns {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn.predict-c {
+  flex: 1;
+  background: transparent;
+  border: 2px dashed var(--coop);
+  color: var(--coop);
+}
+
+.btn.predict-d {
+  flex: 1;
+  background: transparent;
+  border: 2px dashed var(--defect);
+  color: var(--defect);
+}
+
+.predict-streak {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c084fc;
+}
+
+.insight-chip {
+  background: rgba(192, 132, 252, 0.14);
+  color: #c084fc;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.commit-area {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.predict-locked {
+  align-self: center;
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* --- 동시 공개 연출 (오버레이) --- */
+.reveal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  user-select: none;
+  animation: view-in 0.18s ease;
+}
+
+.reveal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px 14px;
+  box-shadow: var(--shadow);
+}
+
+.rv-cards {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 16px;
+}
+
+.rv-card {
+  position: relative;
+  width: 72px;
+  height: 94px;
+  perspective: 600px;
+}
+
+.rv-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rv-open .rv-inner {
+  transform: rotateY(180deg);
+}
+
+.rv-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.rv-back {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--panel),
+    var(--panel) 6px,
+    var(--bg) 6px,
+    var(--bg) 12px
+  );
+}
+
+.rv-front {
+  transform: rotateY(180deg);
+}
+
+.rv-front.rv-c {
+  background: rgba(52, 211, 153, 0.14);
+  border-color: var(--coop);
+}
+
+.rv-front.rv-d {
+  background: rgba(248, 113, 113, 0.14);
+  border-color: var(--defect);
+}
+
+.rv-glyph {
+  font-size: 26px;
+}
+
+.rv-move {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.rv-who {
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.rv-vs {
+  min-width: 36px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.step-beat .rv-vs {
+  color: var(--text-h);
+  animation: vs-pulse 0.3s ease infinite;
+}
+
+.rv-glitch {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(248, 113, 113, 0.2);
+  color: var(--defect);
+  border-radius: 6px;
+  padding: 2px 6px;
+  animation: glitch-jitter 0.32s steps(3) 2;
+}
+
+.rv-stamp {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  transform: rotate(8deg);
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 3px 10px;
+  font-size: 13px;
+  font-weight: 800;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  animation: stamp-slam 0.32s cubic-bezier(0.22, 1.4, 0.5, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.rv-stamp.hit {
+  color: #c084fc;
+  border-color: #c084fc;
+}
+
+.rv-stamp.miss {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.skip-hint {
+  font-size: 11px;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.read-result {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.read-result.hit {
+  color: #c084fc;
+}
+
+.read-result.miss {
+  color: var(--text);
+}
+
+.analysis-read {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c084fc;
+}
+
+.mindreader-badge {
+  color: #fbbf24;
+}
+
+/* --- 행동 칩 (엿보기 / 재전송) --- */
+.predict-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #c084fc;
+  background: rgba(192, 132, 252, 0.1);
+  color: #c084fc;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chip:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.chip-cost {
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+.chip.chip-urgent {
+  border-color: var(--defect);
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--defect);
+  margin: 6px 0;
+}
+
+.chip-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--defect);
+  transform-origin: left;
+  animation: timer-drain 3s linear forwards;
+}
+
+.predict-locked.peeked {
+  color: #c084fc;
+  font-weight: 700;
+}
+
+/* --- 스테이지 트위스트 --- */
+.taunt-bubble {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  max-width: 46%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px 12px 12px 2px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-h);
+  text-align: left;
+  animation: view-in 0.25s ease;
+}
+
+.openhand-badge {
+  font-size: 12px;
+  color: var(--coop);
+  background: rgba(52, 211, 153, 0.12);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.fuse-badge {
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.fuse-badge.lit {
+  color: #fb923c;
+  border-color: #fb923c;
+  background: rgba(251, 146, 60, 0.12);
+  animation: fuse-flicker 0.8s ease infinite;
+}
+
+.amend-badge {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--coop);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+/* --- 텔 배지 --- */
+.tell-badge {
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.tell-badge.tell-mirror {
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.4);
+}
+
+.tell-badge.tell-forgive {
+  color: var(--coop);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.tell-badge.tell-vane {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.tell-badge.tell-coin {
+  color: var(--text-h);
+}
+
+.forgive-fx {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  font-size: 26px;
+  animation: float-up 1.1s ease-out forwards;
+  pointer-events: none;
+}
+
+/* --- 간파 스트릭 콘페티 --- */
+.confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cf {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: confetti-burst 0.8s ease-out forwards;
+}
+
+.cf-0 { --dx: -70px; --dy: -54px; background: #c084fc; }
+.cf-1 { --dx: 64px; --dy: -62px; background: #34d399; animation-delay: 0.02s; }
+.cf-2 { --dx: -38px; --dy: -78px; background: #fbbf24; animation-delay: 0.04s; }
+.cf-3 { --dx: 84px; --dy: -30px; background: #f87171; animation-delay: 0.01s; }
+.cf-4 { --dx: -92px; --dy: -16px; background: #93c5fd; animation-delay: 0.05s; }
+.cf-5 { --dx: 24px; --dy: -88px; background: #c084fc; animation-delay: 0.03s; }
+.cf-6 { --dx: -58px; --dy: 36px; background: #34d399; animation-delay: 0.06s; }
+.cf-7 { --dx: 48px; --dy: 44px; background: #fbbf24; animation-delay: 0.02s; }
+.cf-8 { --dx: 96px; --dy: 8px; background: #93c5fd; animation-delay: 0.07s; }
+.cf-9 { --dx: -20px; --dy: 60px; background: #f87171; animation-delay: 0.04s; }
+.cf-10 { --dx: 8px; --dy: -52px; background: #fde68a; animation-delay: 0.08s; }
+.cf-11 { --dx: -84px; --dy: -40px; background: #fca5a5; animation-delay: 0.05s; }
+
+/* --- 전략 공방 --- */
+.builder-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.builder-name-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.glyph-picker {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.glyph-btn {
+  font-size: 18px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.glyph-btn.on {
+  border-color: #f472b6;
+  background: rgba(244, 114, 182, 0.12);
+}
+
+/* 전략 페르소나 빠른 선택 */
+.persona-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.persona-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  text-align: left;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    border-color 0.12s ease,
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.persona-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(244, 114, 182, 0.5);
+}
+
+.persona-card.on {
+  border-color: #f472b6;
+  background: rgba(244, 114, 182, 0.12);
+  box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.45);
+}
+
+.persona-glyph {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.persona-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-h);
+}
+
+.persona-tag {
+  font-size: 11px;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+/* 현재 스탠스 요약 배지 — "지금 무엇을 들고 가는가"를 항상 보여준다 */
+.stance-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(244, 114, 182, 0.08);
+  border: 1px solid var(--border);
+}
+
+.stance-banner .stance-face {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.stance-banner .stance-id {
+  font-weight: 800;
+  color: var(--text-h);
+}
+
+.stance-banner .stance-summary {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.tune-hint {
+  margin: 0;
+}
+
+.tune-header {
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+.name-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text-h);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slot-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.slot-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.rule-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.rule-card.on {
+  border-color: #f472b6;
+  background: rgba(244, 114, 182, 0.1);
+}
+
+.rule-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.rule-desc {
+  font-size: 11px;
+  color: var(--text);
+}
+
+.reinvent-toast {
+  background: rgba(192, 132, 252, 0.12);
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  color: #c084fc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  animation: view-in 0.25s ease;
+}
+
+.spar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.spar-label {
+  font-size: 12px;
+  color: var(--text);
+  min-width: 76px;
+}
+
+.spar-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin-left: auto;
+}
+
+/* --- 진화의 정원 --- */
+.evo-gate {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evo-gate-strategy {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.evo-gate-q {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.evo-gate-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.evo-item.mine {
+  font-weight: 800;
+  color: #f472b6;
+}
+
+.evo-verdict {
+  position: relative;
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.evo-verdict .rv-stamp {
+  top: -10px;
+  right: 10px;
+}
+
+.evo-verdict.fate-thrive {
+  border-color: var(--coop);
+}
+
+.evo-verdict.fate-extinct {
+  border-color: var(--defect);
+}
+
+.evo-blurb {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.evo-cta {
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.evo-cta p {
+  margin: 0;
+  color: var(--text);
+}
+
+.garden-card {
+  border-color: rgba(52, 211, 153, 0.45);
+}
+
+/* ===================== 안개의 세계 (피벗 모드) ===================== */
+
+.title-mode-hint {
+  margin: 16px 0 0;
+  font-size: 13px;
+  color: var(--text);
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* 안개 단서 카드 — 흐릿한 글래스 질감으로 "정체 불명"을 시각화 */
+.fog-clues {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(192, 132, 252, 0.08), transparent 70%),
+    var(--panel);
+  margin-bottom: 16px;
+}
+
+.clue-list {
+  margin: 10px 0 14px;
+  padding-left: 18px;
+  line-height: 1.8;
+  color: var(--text-h);
+}
+
+.clue-list li {
+  position: relative;
+}
+
+.world-params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 12.5px;
+  color: var(--text);
+  opacity: 0.85;
+  border-top: 1px dashed var(--border);
+  padding-top: 12px;
+}
+
+/* 조우 진행 헤더 */
+.fog-running {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+.fog-running strong {
+  color: var(--text-h);
+  font-size: 18px;
+}
+
+.fog-vs {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* 조우 리스트 — 안개 낀 칸이 공개되며 승패 색이 든다 */
+.encounter-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.encounter-card {
+  display: grid;
+  grid-template-columns: 36px 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  transition: filter 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.encounter-card.fogged {
+  filter: blur(0.4px);
+  opacity: 0.55;
+  color: var(--text);
+}
+
+.encounter-card.revealed {
+  animation: enc-reveal 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.encounter-card.won {
+  border-color: rgba(52, 211, 153, 0.5);
+}
+
+.encounter-card.lost {
+  border-color: rgba(248, 113, 113, 0.5);
+}
+
+@keyframes enc-reveal {
+  from {
+    transform: translateY(6px);
+    opacity: 0;
+    filter: blur(3px);
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.enc-index {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.enc-opp {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.enc-rounds {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.enc-score {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.enc-fog {
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+.evolving-note {
+  text-align: center;
+  color: var(--accent);
+}
+
+/* 효율 미터 — 절대 점수가 아니라 "최선 대비 몇 %"를 보여준다 */
+.efficiency-meter {
+  margin: 16px 0;
+}
+
+.eff-bar {
+  height: 14px;
+  border-radius: 7px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.eff-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--defect), #fbbf24 55%, var(--coop));
+  border-radius: 7px 0 0 7px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.eff-label {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.eff-label strong {
+  color: var(--text-h);
+  font-size: 16px;
+}
+
+.score-breakdown {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.score-breakdown strong {
+  color: var(--text-h);
+}
+
+.score-breakdown .muted {
+  opacity: 0.6;
+  font-size: 12.5px;
+}
+
+.verdict {
+  text-align: center;
+  font-size: 15px;
+  color: var(--text-h);
+  margin: 6px 0 14px;
+}
+
+.best-stance {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.best-match {
+  color: var(--coop);
+  font-weight: 600;
+  margin: 0;
+}
+
+.stance-summary {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.stance-summary + .hint {
+  margin-top: 8px;
+}
+
+/* --- 안개 읽기 베팅 (조우 게임화) --- */
+.fog-encounter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  margin-bottom: 14px;
+  transition: border-color 0.25s ease;
+}
+
+.fog-encounter.won {
+  border-color: rgba(52, 211, 153, 0.5);
+}
+
+.fog-encounter.lost {
+  border-color: rgba(248, 113, 113, 0.5);
+}
+
+.fog-portrait {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 116px;
+  height: 116px;
+}
+
+.fog-portrait.fogged {
+  filter: blur(1px);
+}
+
+.fog-silhouette {
+  font-size: 72px;
+  animation: fog-drift 3s ease-in-out infinite;
+}
+
+@keyframes fog-drift {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
+
+.fog-read-prompt {
+  font-size: 16px;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.fog-last {
+  margin: 0;
+}
+
+.fog-bet-actions {
+  margin-top: 4px;
+}
+
+.enc-opp-reveal {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.enc-trace {
+  margin: 4px 0;
+}
+
+.fog-score-row {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.fog-score-row strong {
+  color: var(--text-h);
+  font-size: 17px;
+}
+
+.read-accuracy {
+  text-align: center;
+  font-size: 13px;
+  color: var(--accent);
+  margin: 4px 0 10px;
 }

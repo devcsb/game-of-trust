@@ -2,9 +2,17 @@ import type { PayoffMatrix } from '../core/types'
 import { runMatch } from './match'
 import { mulberry32 } from '../core/rng'
 import type { StrategyId } from '../core/strategy/Strategy'
+import type { StrategySpec } from '../core/strategy/registry'
+
+/** 종(種) 지칭: 빌트인 id 문자열 또는 StrategySpec(커스텀 포함). */
+export type SpeciesRef = StrategyId | StrategySpec
+
+export function toSpec(ref: SpeciesRef): StrategySpec {
+  return typeof ref === 'string' ? { id: ref } : ref
+}
 
 export interface EvolutionConfig {
-  strategies: StrategyId[]
+  strategies: SpeciesRef[]
   rounds: number // 전략쌍 매치당 라운드 수
   payoff: PayoffMatrix
   executionNoise: number
@@ -14,14 +22,14 @@ export interface EvolutionConfig {
 }
 
 export interface EvolutionResult {
-  strategies: StrategyId[]
+  strategies: SpeciesRef[]
   history: number[][] // [generation][strategyIndex] = 비율, 각 세대 합 1
   payoffMatrix: number[][] // A[i][j] = i가 j를 상대한 평균 점수/라운드
 }
 
 /** A[i][j] = strategies[i]가 strategies[j]를 상대로 얻는 평균 점수/라운드. */
 export function buildPayoffMatrix(
-  strategies: StrategyId[],
+  strategies: SpeciesRef[],
   rounds: number,
   payoff: PayoffMatrix,
   executionNoise: number,
@@ -34,8 +42,8 @@ export function buildPayoffMatrix(
     for (let j = 0; j < n; j++) {
       const s = seed + i * 131 + j * 17
       const out = runMatch(
-        { id: strategies[i] },
-        { id: strategies[j] },
+        toSpec(strategies[i]),
+        toSpec(strategies[j]),
         { rounds, payoff, executionNoise, perceptionNoise: 0, seed: s },
         mulberry32(s),
       )

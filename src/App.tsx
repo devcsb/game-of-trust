@@ -4,12 +4,23 @@ import { STAGES, stageById } from './game/stages'
 import type { ProgressMap } from './game/progress'
 import { loadProgress, saveProgress, recordStageResult } from './game/progress'
 import type { PlayAnalysis } from './game/analysis'
+import type { CustomStrategyDef } from './core/strategy/custom'
+import { loadStrategies, saveStrategies } from './game/storage'
 import { TitleScreen } from './ui/TitleScreen'
 import { StageMap } from './ui/StageMap'
 import { GamePlay } from './ui/GamePlay'
 import { StageResult } from './ui/StageResult'
 import { EvolutionView } from './ui/EvolutionView'
+import { BuilderView } from './ui/BuilderView'
 import { MuteToggle } from './ui/MuteToggle'
+import { WorldMap } from './ui/WorldMap'
+import { GauntletView } from './ui/GauntletView'
+import { worldById } from './game/worlds'
+import {
+  loadWorldProgress,
+  saveWorldProgress,
+  recordWorldResult,
+} from './game/worldProgress'
 
 type Screen =
   | { name: 'title' }
@@ -26,25 +37,85 @@ type Screen =
       analysis: PlayAnalysis
     }
   | { name: 'evolution' }
+  | { name: 'builder' }
+  | { name: 'worlds' }
+  | { name: 'gauntlet'; worldId: string }
 
 function App() {
   const [screen, setScreen] = useState<Screen>({ name: 'title' })
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress())
+  const [myStrategy, setMyStrategy] = useState<CustomStrategyDef | null>(
+    () => loadStrategies()[0] ?? null,
+  )
+  const [worldFile, setWorldFile] = useState(() => loadWorldProgress())
 
   function renderScreen() {
     if (screen.name === 'title') {
-      return <TitleScreen onStart={() => setScreen({ name: 'map' })} />
+      return (
+        <TitleScreen
+          onStart={() => setScreen({ name: 'map' })}
+          onWorlds={() => setScreen({ name: 'worlds' })}
+        />
+      )
+    }
+    if (screen.name === 'worlds') {
+      return (
+        <WorldMap
+          progress={worldFile.progress}
+          onSelect={(id) => setScreen({ name: 'gauntlet', worldId: id })}
+          onBack={() => setScreen({ name: 'title' })}
+        />
+      )
+    }
+    if (screen.name === 'gauntlet') {
+      const world = worldById(screen.worldId)!
+      return (
+        <GauntletView
+          key={world.id}
+          world={world}
+          initialStance={worldFile.lastStance ?? myStrategy}
+          onQuit={() => setScreen({ name: 'worlds' })}
+          onComplete={({ stars, efficiency, stance }) => {
+            const next = recordWorldResult(worldFile, world.id, stars, efficiency, stance)
+            setWorldFile(next)
+            saveWorldProgress(next)
+            setScreen({ name: 'worlds' })
+          }}
+        />
+      )
     }
     if (screen.name === 'map') {
+      const finalCleared = Boolean(progress[STAGES[STAGES.length - 1].id]?.cleared)
       return (
         <StageMap
           progress={progress}
           onSelect={(id) => setScreen({ name: 'play', stageId: id })}
+          onEvolution={finalCleared ? () => setScreen({ name: 'evolution' }) : undefined}
+          onBack={() => setScreen({ name: 'title' })}
         />
       )
     }
     if (screen.name === 'evolution') {
-      return <EvolutionView onBack={() => setScreen({ name: 'map' })} />
+      return (
+        <EvolutionView
+          playerDef={myStrategy}
+          onCreateStrategy={() => setScreen({ name: 'builder' })}
+          onBack={() => setScreen({ name: 'map' })}
+        />
+      )
+    }
+    if (screen.name === 'builder') {
+      return (
+        <BuilderView
+          initial={myStrategy}
+          onSave={(def) => {
+            setMyStrategy(def)
+            saveStrategies([def])
+            setScreen({ name: 'evolution' })
+          }}
+          onBack={() => setScreen({ name: 'evolution' })}
+        />
+      )
     }
     if (screen.name === 'play') {
       const stage = stageById(screen.stageId)!

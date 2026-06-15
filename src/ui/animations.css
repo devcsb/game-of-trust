@@ -188,6 +188,85 @@
   }
 }
 
+/* === 동시 공개 연출 (RevealStage) === */
+@keyframes vs-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.35);
+  }
+}
+
+@keyframes glitch-jitter {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  33% {
+    transform: translateX(-54%) translateY(-2px);
+  }
+  66% {
+    transform: translateX(-46%) translateY(1px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes stamp-slam {
+  0% {
+    transform: rotate(8deg) scale(2.2);
+    opacity: 0;
+  }
+  60% {
+    transform: rotate(8deg) scale(0.92);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(8deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.rv-card.rv-l {
+  animation: hand-meet-l 0.3s ease;
+}
+
+.rv-card.rv-r {
+  animation: hand-meet-r 0.3s ease;
+}
+
+@keyframes timer-drain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes fuse-flicker {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.5);
+  }
+}
+
+@keyframes confetti-burst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(260deg) scale(0.6);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .float-points,
   .fx-shake,
@@ -203,8 +282,26 @@
   .ex-orb,
   .ex-share .ex-pool,
   .ex-collapse .ex-pool,
+  .rv-card.rv-l,
+  .rv-card.rv-r,
+  .rv-glitch,
+  .rv-stamp,
+  .step-beat .rv-vs,
+  .taunt-bubble,
+  .fuse-badge.lit,
+  .forgive-fx,
+  .cf,
+  .reveal-overlay,
+  .encounter-card.revealed,
+  .fog-silhouette,
   .view {
     animation: none !important;
   }
+  .cf {
+    opacity: 0;
+  }
   .ex-orb { opacity: 1; }
+  .rv-inner { transition: none !important; }
+  .eff-fill { transition: none !important; }
+  .encounter-card.fogged { filter: none; }
 }

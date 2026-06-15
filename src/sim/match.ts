@@ -1,13 +1,11 @@
 import type { MatchConfig, Move, Observation, RoundResult } from '../core/types'
 import { applyNoise } from '../core/noise'
 import type { RNG } from '../core/rng'
-import { makeStrategy } from '../core/strategy/registry'
-import type { StrategyId, StrategyParams } from '../core/strategy/Strategy'
+import { resolveStrategy } from '../core/strategy/registry'
+import type { StrategySpec } from '../core/strategy/registry'
 
-export interface MatchPlayer {
-  id: StrategyId
-  params?: StrategyParams
-}
+/** 기존 { id, params? } 리터럴과 구조적으로 호환된다. 커스텀 전략은 { custom }. */
+export type MatchPlayer = StrategySpec
 
 export interface MatchOutcome {
   rounds: RoundResult[]
@@ -31,8 +29,8 @@ export function runMatch(
   cfg: MatchConfig,
   rng: RNG,
 ): MatchOutcome {
-  const sa = makeStrategy(a.id, a.params)
-  const sb = makeStrategy(b.id, b.params)
+  const sa = resolveStrategy(a)
+  const sb = resolveStrategy(b)
   const { T, R, P, S } = cfg.payoff
 
   const rounds: RoundResult[] = []

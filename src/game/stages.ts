@@ -42,14 +42,14 @@ export const STAGES: Stage[] = [
     index: 0,
     character: { name: '호구', glyph: '🐤', blurb: '무슨 일이 있어도 늘 협력한다.' },
     opponentId: 'allc',
-    rounds: 10,
+    rounds: 6,
     executionNoise: 0,
     intro:
       '먼저 규칙: 둘이 협력하면 합쳐서 6, 한쪽만 배신하면 합쳐서 5뿐, 둘 다 배신하면 2를 거둬요. 이 상대는 절대 배신하지 않아요.',
     lesson:
       '착하기만 한 상대는 이용할 수 있어요. 배신하면 내 점수는 오르지만, 함께 거두는 수확은 6에서 5로 줄어요.',
-    starThresholds: [12, 22, 28],
-    welfareGoal: 54,
+    starThresholds: [7, 13, 17],
+    welfareGoal: 32,
     mechanics: { prediction: false, openHand: true },
   },
   {
@@ -57,13 +57,13 @@ export const STAGES: Stage[] = [
     index: 1,
     character: { name: '악당', glyph: '😈', blurb: '무조건 배신한다.' },
     opponentId: 'alld',
-    rounds: 10,
+    rounds: 6,
     executionNoise: 0,
     intro:
       '이번부터는 매 라운드 상대의 수를 먼저 예측해요. 맞히면 🔮통찰이 쌓여요. 이 상대는 말은 번지르르하지만… 과연?',
     lesson:
       '무조건 협력하면 호구가 돼요. 이런 상대와는 함께 거둘 게 없어요. 같이 배신하는 게 그나마 방어예요. 그리고 말과 행동은 달라요 — 믿을 건 행동뿐.',
-    starThresholds: [3, 6, 9],
+    starThresholds: [2, 4, 5],
     welfareGoal: null,
     mechanics: {
       prediction: true,
@@ -151,4 +151,15 @@ export const STAGES: Stage[] = [
 
 export function stageById(id: string): Stage | undefined {
   return STAGES.find((s) => s.id === id)
+}
+
+/**
+ * 내 수에 반응하지 않는 상대 (상수 전략이거나 무작위) — 미래 응수가 내 미래 선택과
+ * 무관하므로, 정체를 간파한 뒤 남은 라운드를 같은 수로 빨리감기 해도 결과가 동일하다.
+ * 거울/복수귀/변덕쟁이처럼 내 직전 수를 읽는 상대는 제외한다 (빨리감기 가정이 깨진다).
+ */
+const FAST_FORWARD_OPPONENTS: StrategyId[] = ['allc', 'alld', 'random']
+
+export function canFastForward(stage: Stage): boolean {
+  return FAST_FORWARD_OPPONENTS.includes(stage.opponentId)
 }

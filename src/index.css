@@ -1,22 +1,53 @@
+/* ===================== 신뢰의 게임 — 디자인 시스템 =====================
+   방향: 촛불 켜진 게임이론 의회. 깊은 잉크-틸 베이스, 촛불 골드 시그니처,
+   협력=세이지 / 배신=러스트 이원색, 안개 그라디언트 + 필름 그레인 + 비네트.
+   타이포: 편집형 세리프(Gowun Batang) + 기술 산세리프(IBM Plex Sans KR)
+   + 데이터 모노(IBM Plex Mono).
+======================================================================== */
 :root {
-  --bg: #16171d;
-  --panel: #1f2028;
-  --border: #2e303a;
-  --text: #c7c9d1;
-  --text-h: #f3f4f6;
-  --accent: #c084fc;
-  --coop: #34d399;
-  --defect: #f87171;
-  --line-a: #60a5fa;
-  --line-b: #fbbf24;
-  --warn: #f87171;
-  --shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.28);
+  /* 표면 */
+  --bg: #0c1411;
+  --bg-2: #081009;
+  --panel: #15201c;
+  --panel-2: #1c2a25;
+  --panel-hi: rgba(255, 255, 255, 0.045);
+  --border: #2b3a34;
+  --border-2: #3d514a;
 
-  font: 15px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* 글자 */
+  --text: #aebbb4;
+  --text-h: #f3efe4;
+  --muted: #7a8b83;
+
+  /* 시그니처: 촛불 골드 (전형적 보라 액센트 제거) */
+  --accent: #e6b34a;
+  --accent-2: #f3cd72;
+  --accent-soft: rgba(230, 179, 74, 0.14);
+  --gold: #e6b34a;
+
+  /* 협력 / 배신 */
+  --coop: #57c08a;
+  --defect: #df5d4e;
+
+  /* 데이터 / 라인 */
+  --cool: #6fa8c0;
+  --line-a: #6fa8c0;
+  --line-b: #e6b34a;
+  --warn: #df5d4e;
+
+  --shadow: 0 22px 48px -18px rgba(0, 0, 0, 0.78), 0 4px 14px -8px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 4px 14px -6px rgba(0, 0, 0, 0.5);
+  --ring: rgba(230, 179, 74, 0.55);
+
+  --font-display: 'Gowun Batang', 'Apple SD Gothic Neo', serif;
+  --font-body: 'IBM Plex Sans KR', system-ui, 'Apple SD Gothic Neo', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  font: 15px/1.55 var(--font-body);
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   letter-spacing: 0.1px;
 }
 
@@ -27,12 +58,45 @@
 body {
   margin: 0;
   min-height: 100svh;
+  color: var(--text);
   background:
-    radial-gradient(1100px 700px at 50% -8%, #21232f 0%, rgba(33, 35, 47, 0) 62%),
+    radial-gradient(1200px 680px at 50% -12%, rgba(230, 179, 74, 0.1), transparent 60%),
+    radial-gradient(1000px 760px at 50% 114%, rgba(46, 92, 78, 0.24), transparent 62%),
+    radial-gradient(760px 540px at 12% 6%, rgba(111, 168, 192, 0.07), transparent 60%),
     var(--bg);
+  background-attachment: fixed;
+}
+
+/* 필름 그레인 — 분위기와 깊이 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 비네트 — 가장자리를 어둡게 가둬 시선을 중앙으로 */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 8999;
+  pointer-events: none;
+  background: radial-gradient(125% 100% at 50% 50%, transparent 56%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 #root {
+  position: relative;
   width: 100%;
   min-height: 100svh;
 }
@@ -41,6 +105,14 @@ h1,
 h2,
 h3 {
   color: var(--text-h);
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
+}
+
+/* 숫자, 코드, 식별자는 모노로 (시뮬레이션 데이터 질감) */
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
 }

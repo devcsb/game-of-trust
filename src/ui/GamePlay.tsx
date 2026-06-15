@@ -4,6 +4,7 @@ import { STANDARD_PAYOFF } from '../core/payoff'
 import { createGameRunner, computeStars } from '../sim/gameRunner'
 import type { GameRoundResult } from '../sim/gameRunner'
 import type { Stage } from '../game/stages'
+import { canFastForward } from '../game/stages'
 import { opponentMood } from '../game/mood'
 import { trustFromHistory } from '../game/trust'
 import { comboCount } from '../game/combo'
@@ -91,7 +92,7 @@ export function GamePlay({
 
   const mech = stage.mechanics
 
-  const { phase, predict, skipPredict, commit, skipReveal } = useRoundPhases(
+  const { phase, predict, skipPredict, commit, skipReveal, resync } = useRoundPhases(
     runner,
     mech.prediction,
     {
@@ -150,6 +151,17 @@ export function GamePlay({
   const mood = fuse ? 'angry' : opponentMood(last)
   const taunt =
     mech.taunts && !done ? mech.taunts[runner.round % mech.taunts.length] : null
+
+  // 빨리감기 가용: 무반응 상대를 2라운드 이상 겪어 패턴을 본 뒤, 입력 단계에서만.
+  const lastMove = last ? last.playerIntended : null
+  const remainingRounds = stage.rounds - runner.round
+  const showFastForward =
+    canFastForward(stage) &&
+    history.length >= 2 &&
+    !done &&
+    lastMove !== null &&
+    remainingRounds > 0 &&
+    (phase.name === 'predict' || phase.name === 'commit')
 
   // 도화선 점화 순간: 화면 흔들림 + 저음. 재전송으로 꺼지면 다시 무장된다.
   useEffect(() => {
@@ -210,6 +222,26 @@ export function GamePlay({
     soundPlay('forgive')
   }
 
+  // 빨리감기: 정체를 간파한 무반응 상대(호구/악당/동전)의 남은 라운드를 같은 수로
+  // 한 번에 진행하고 결과로 점프한다. runner.playRound가 수동 플레이와 동일한 경로를
+  // 재생하므로 점수·RNG 소비가 정확히 일치한다 (연출만 생략).
+  const fastForward = (move: Move) => {
+    resumeAudio()
+    closeResend()
+    const results: GameRoundResult[] = []
+    while (!runner.done) {
+      results.push(runner.roundPending ? runner.commitRound(move) : runner.playRound(move))
+    }
+    if (results.length === 0) return
+    setHistory((h) => [...h, ...results])
+    setPeeked(null)
+    const lastR = results[results.length - 1]
+    const allCoop = lastR.playerPlayed === 'C' && lastR.opponentPlayed === 'C'
+    soundPlay('flip')
+    soundPlay(allCoop ? 'coop' : 'defect', 0)
+    resync()
+  }
+
   const finish = () => {
     const score = runner.playerScore
     const stars = computeStars(score, stage.starThresholds)
@@ -243,6 +275,7 @@ export function GamePlay({
     hotkeys[' '] = hotkeys['enter'] = finish
   }
   if (resendFor !== null) hotkeys['r'] = handleResend
+  if (showFastForward && lastMove) hotkeys['f'] = () => fastForward(lastMove)
   useHotkeys(hotkeys)
 
   return (
@@ -408,6 +441,17 @@ export function GamePlay({
             </button>
           </div>
         </div>
+      )}
+
+      {showFastForward && lastMove && (
+        <button className="btn ff-btn" onClick={() => fastForward(lastMove)}>
+          <span className="ff-main">
+            ⏩ 남은 {remainingRounds}턴 모두 “{moveLabel(lastMove)}”로 진행
+          </span>
+          <span className="ff-sub">
+            이 상대는 다 읽었어요 — 결과로 건너뛰기 <kbd className="kbd-hint">F</kbd>
+          </span>
+        </button>
       )}
 
       {phase.name === 'done' && (

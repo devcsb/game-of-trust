@@ -47,6 +47,8 @@ export function useRoundPhases(
   skipPredict(): void
   commit(m: Move): void
   skipReveal(): void
+  /** 외부에서 runner를 일괄 진행(빨리감기)한 뒤 위상을 현재 runner 상태로 재동기화한다. */
+  resync(): void
 } {
   const entry = (): RoundPhase =>
     runner.done
@@ -156,5 +158,12 @@ export function useRoundPhases(
     settle(phase.result, phase.predicted)
   }
 
-  return { phase, predict, skipPredict, commit, skipReveal }
+  const resync = () => {
+    chain.current++ // 살아 있는 옛 타이머 콜백 무효화
+    if (timer.current) clearTimeout(timer.current)
+    revealing.current = false
+    setPhase(entry())
+  }
+
+  return { phase, predict, skipPredict, commit, skipReveal, resync }
 }

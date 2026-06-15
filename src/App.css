@@ -16,26 +16,77 @@
 }
 
 .screen-title {
-  font-size: 22px;
-  margin: 0 0 16px;
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: var(--text-h);
+  margin: 0 0 20px;
+  padding-bottom: 11px;
+}
+
+.screen-title::after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  bottom: 0;
+  width: 46px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
 }
 
 .card {
-  background: var(--panel);
+  position: relative;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 22px;
   box-shadow: var(--shadow);
+}
+
+/* 카드 상단 미세 하이라이트 — 빛을 받는 입체감 */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 var(--panel-hi);
+}
+
+/* 안내 문단 공통 */
+.hint {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.65;
 }
 
 .title-card {
   text-align: center;
-  max-width: 420px;
+  max-width: 440px;
+  padding: 38px 30px 34px;
+  overflow: hidden;
+}
+
+/* 타이틀 엠블럼 — 신뢰의 상징, 촛불 글로우 */
+.title-card::before {
+  content: '🤝';
+  display: block;
+  font-size: 38px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 18px rgba(230, 179, 74, 0.45));
 }
 
 .title-card h1 {
-  font-size: 30px;
-  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 46px;
+  line-height: 1.04;
+  letter-spacing: -0.8px;
+  margin: 0 0 14px;
+  color: var(--text-h);
+  text-shadow: 0 0 34px rgba(230, 179, 74, 0.22);
 }
 
 .title-card p {
@@ -46,12 +97,18 @@
 
 .btn {
   border: none;
-  border-radius: 10px;
+  border-radius: 11px;
   padding: 12px 20px;
   font-size: 15px;
+  font-family: var(--font-body);
+  letter-spacing: 0.2px;
   cursor: pointer;
   font-weight: 600;
-  transition: transform 0.05s ease, filter 0.15s ease;
+  white-space: nowrap;
+  transition:
+    transform 0.13s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
 /* --- 키보드 접근성 --- */
@@ -85,7 +142,8 @@ kbd.kbd-hint {
 }
 
 .btn:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.06);
+  transform: translateY(-1px);
 }
 
 .btn:active {
@@ -93,8 +151,17 @@ kbd.kbd-hint {
 }
 
 .btn.primary {
-  background: var(--accent);
-  color: #14121a;
+  background: linear-gradient(180deg, var(--accent-2), var(--accent));
+  color: #1b1304;
+  box-shadow:
+    0 8px 20px -8px rgba(230, 179, 74, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn.primary:hover {
+  box-shadow:
+    0 13px 28px -8px rgba(230, 179, 74, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.36);
 }
 
 .btn.coop {
@@ -130,9 +197,21 @@ kbd.kbd-hint {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 6px 12px;
+  gap: 6px 14px;
   text-align: left;
   cursor: pointer;
+  transition:
+    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.16s ease,
+    box-shadow 0.2s ease;
+}
+
+.stage-card:not(.locked):hover {
+  transform: translateY(-3px);
+  border-color: var(--border-2);
+  box-shadow:
+    0 20px 36px -18px rgba(0, 0, 0, 0.72),
+    0 0 0 1px var(--accent-soft);
 }
 
 .stage-card.locked {
@@ -141,8 +220,15 @@ kbd.kbd-hint {
 }
 
 .stage-card .glyph {
-  font-size: 26px;
+  font-size: 24px;
   grid-row: span 2;
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 32%, var(--panel-2), var(--bg));
+  border: 1px solid var(--border);
 }
 
 .stage-name {
@@ -167,7 +253,8 @@ kbd.kbd-hint {
 }
 
 .star.on {
-  color: #fbbf24;
+  color: var(--gold);
+  filter: drop-shadow(0 0 6px rgba(230, 179, 74, 0.5));
 }
 
 .play {
@@ -873,6 +960,7 @@ kbd.kbd-hint {
 
 .title-card .actions {
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .intro-banner {
@@ -923,12 +1011,12 @@ kbd.kbd-hint {
 .predict-streak {
   font-size: 12px;
   font-weight: 700;
-  color: #c084fc;
+  color: var(--accent);
 }
 
 .insight-chip {
-  background: rgba(192, 132, 252, 0.14);
-  color: #c084fc;
+  background: rgba(230, 179, 74, 0.14);
+  color: var(--accent);
   border-radius: 999px;
   padding: 4px 12px;
   font-weight: 700;
@@ -939,6 +1027,33 @@ kbd.kbd-hint {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+/* 빨리감기 — 정체를 간파한 무반응 상대의 남은 턴을 한 번에 */
+.ff-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  padding: 11px 16px;
+  background: transparent;
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+}
+
+.ff-btn:hover {
+  background: var(--accent-soft);
+}
+
+.ff-main {
+  font-weight: 700;
+}
+
+.ff-sub {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.82;
 }
 
 .predict-locked {
@@ -1108,8 +1223,8 @@ kbd.kbd-hint {
 }
 
 .rv-stamp.hit {
-  color: #c084fc;
-  border-color: #c084fc;
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .rv-stamp.miss {
@@ -1130,7 +1245,7 @@ kbd.kbd-hint {
 }
 
 .read-result.hit {
-  color: #c084fc;
+  color: var(--accent);
 }
 
 .read-result.miss {
@@ -1140,7 +1255,7 @@ kbd.kbd-hint {
 .analysis-read {
   font-size: 12px;
   font-weight: 700;
-  color: #c084fc;
+  color: var(--accent);
 }
 
 .mindreader-badge {
@@ -1158,9 +1273,9 @@ kbd.kbd-hint {
 .chip {
   position: relative;
   overflow: hidden;
-  border: 1px solid #c084fc;
-  background: rgba(192, 132, 252, 0.1);
-  color: #c084fc;
+  border: 1px solid var(--accent);
+  background: rgba(230, 179, 74, 0.1);
+  color: var(--accent);
   border-radius: 999px;
   padding: 6px 14px;
   font-size: 13px;
@@ -1197,7 +1312,7 @@ kbd.kbd-hint {
 }
 
 .predict-locked.peeked {
-  color: #c084fc;
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -1307,12 +1422,12 @@ kbd.kbd-hint {
   animation: confetti-burst 0.8s ease-out forwards;
 }
 
-.cf-0 { --dx: -70px; --dy: -54px; background: #c084fc; }
+.cf-0 { --dx: -70px; --dy: -54px; background: var(--accent); }
 .cf-1 { --dx: 64px; --dy: -62px; background: #34d399; animation-delay: 0.02s; }
 .cf-2 { --dx: -38px; --dy: -78px; background: #fbbf24; animation-delay: 0.04s; }
 .cf-3 { --dx: 84px; --dy: -30px; background: #f87171; animation-delay: 0.01s; }
 .cf-4 { --dx: -92px; --dy: -16px; background: #93c5fd; animation-delay: 0.05s; }
-.cf-5 { --dx: 24px; --dy: -88px; background: #c084fc; animation-delay: 0.03s; }
+.cf-5 { --dx: 24px; --dy: -88px; background: var(--accent); animation-delay: 0.03s; }
 .cf-6 { --dx: -58px; --dy: 36px; background: #34d399; animation-delay: 0.06s; }
 .cf-7 { --dx: 48px; --dy: 44px; background: #fbbf24; animation-delay: 0.02s; }
 .cf-8 { --dx: 96px; --dy: 8px; background: #93c5fd; animation-delay: 0.07s; }
@@ -1349,8 +1464,8 @@ kbd.kbd-hint {
 }
 
 .glyph-btn.on {
-  border-color: #f472b6;
-  background: rgba(244, 114, 182, 0.12);
+  border-color: var(--accent);
+  background: rgba(230, 179, 74, 0.12);
 }
 
 /* 전략 페르소나 빠른 선택 */
@@ -1380,13 +1495,13 @@ kbd.kbd-hint {
 
 .persona-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(244, 114, 182, 0.5);
+  border-color: rgba(230, 179, 74, 0.5);
 }
 
 .persona-card.on {
-  border-color: #f472b6;
-  background: rgba(244, 114, 182, 0.12);
-  box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.45);
+  border-color: var(--accent);
+  background: rgba(230, 179, 74, 0.12);
+  box-shadow: 0 0 0 1px rgba(230, 179, 74, 0.45);
 }
 
 .persona-glyph {
@@ -1413,7 +1528,7 @@ kbd.kbd-hint {
   gap: 10px;
   padding: 8px 12px;
   border-radius: 10px;
-  background: rgba(244, 114, 182, 0.08);
+  background: rgba(230, 179, 74, 0.08);
   border: 1px solid var(--border);
 }
 
@@ -1483,8 +1598,8 @@ kbd.kbd-hint {
 }
 
 .rule-card.on {
-  border-color: #f472b6;
-  background: rgba(244, 114, 182, 0.1);
+  border-color: var(--accent);
+  background: rgba(230, 179, 74, 0.1);
 }
 
 .rule-label {
@@ -1499,9 +1614,9 @@ kbd.kbd-hint {
 }
 
 .reinvent-toast {
-  background: rgba(192, 132, 252, 0.12);
-  border: 1px solid rgba(192, 132, 252, 0.4);
-  color: #c084fc;
+  background: rgba(230, 179, 74, 0.12);
+  border: 1px solid rgba(230, 179, 74, 0.4);
+  color: var(--accent);
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 13px;
@@ -1560,7 +1675,7 @@ kbd.kbd-hint {
 
 .evo-item.mine {
   font-weight: 800;
-  color: #f472b6;
+  color: var(--accent);
 }
 
 .evo-verdict {
@@ -1622,7 +1737,7 @@ kbd.kbd-hint {
 /* 안개 단서 카드 — 흐릿한 글래스 질감으로 "정체 불명"을 시각화 */
 .fog-clues {
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(192, 132, 252, 0.08), transparent 70%),
+    radial-gradient(120% 80% at 50% 0%, rgba(230, 179, 74, 0.08), transparent 70%),
     var(--panel);
   margin-bottom: 16px;
 }
@@ -1917,4 +2032,36 @@ kbd.kbd-hint {
   font-size: 13px;
   color: var(--accent);
   margin: 4px 0 10px;
+}
+
+/* ===================== 데이터/숫자는 모노로 =====================
+   점수, 보수값, 효율 같은 수치를 모노로 통일해 "시뮬레이션 데이터" 질감을 준다. */
+.sb strong,
+.welfare-total,
+.welfare-goal,
+.result-score,
+.eff-label strong,
+.fog-running strong,
+.fog-score-row strong,
+.enc-score,
+.enc-opp-reveal,
+.score-breakdown strong,
+.spar-score,
+.payoff-table td {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.4px;
+}
+
+/* 음소거 토글 — 떠 있는 글래스 칩 */
+.mute-toggle {
+  backdrop-filter: blur(6px);
+  transition:
+    transform 0.13s ease,
+    border-color 0.16s ease;
+}
+
+.mute-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-2);
 }

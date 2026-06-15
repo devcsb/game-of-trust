@@ -43,6 +43,38 @@
   --font-body: 'IBM Plex Sans KR', system-ui, 'Apple SD Gothic Neo', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
 
+  /* 간격 — 4px 베이스 스케일. 모든 padding/gap/margin은 여기서 고른다.
+     매직 넘버 대신 한 리듬에 맞춰 디테일의 어색함을 없앤다. */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+
+  /* 모서리 반경 — 작은 칩/입력 → md 버튼/패널 → lg 카드 */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* 타이포 스케일 */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-base: 15px;
+  --fs-md: 17px;
+  --fs-lg: 20px;
+  --fs-xl: 27px;
+  --fs-2xl: 34px;
+  --fs-3xl: 46px;
+
+  /* 컨트롤 높이 — 일관된 터치 타깃 (44px+ 권장) */
+  --btn-h: 46px;
+  --btn-h-sm: 34px;
+
   font: 15px/1.55 var(--font-body);
   color: var(--text);
   background: var(--bg);

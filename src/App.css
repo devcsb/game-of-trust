@@ -5,7 +5,7 @@
 .screen {
   max-width: 640px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: var(--s-6) var(--s-4);
 }
 
 .screen.center {
@@ -18,12 +18,12 @@
 .screen-title {
   position: relative;
   font-family: var(--font-display);
-  font-size: 27px;
+  font-size: var(--fs-xl);
   font-weight: 700;
   letter-spacing: -0.4px;
   color: var(--text-h);
-  margin: 0 0 20px;
-  padding-bottom: 11px;
+  margin: 0 0 var(--s-5);
+  padding-bottom: var(--s-3);
 }
 
 .screen-title::after {
@@ -41,8 +41,8 @@
   position: relative;
   background: linear-gradient(180deg, var(--panel-2), var(--panel));
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 22px;
+  border-radius: var(--r-lg);
+  padding: var(--s-5);
   box-shadow: var(--shadow);
 }
 
@@ -66,7 +66,7 @@
 .title-card {
   text-align: center;
   max-width: 440px;
-  padding: 38px 30px 34px;
+  padding: var(--s-10) var(--s-8) var(--s-8);
   overflow: hidden;
 }
 
@@ -75,7 +75,7 @@
   content: '🤝';
   display: block;
   font-size: 38px;
-  margin-bottom: 10px;
+  margin-bottom: var(--s-3);
   filter: drop-shadow(0 0 18px rgba(230, 179, 74, 0.45));
 }
 
@@ -96,10 +96,15 @@
 }
 
 .btn {
-  border: none;
-  border-radius: 11px;
-  padding: 12px 20px;
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--btn-h);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  padding: 0 var(--s-5);
+  font-size: var(--fs-base);
   font-family: var(--font-body);
   letter-spacing: 0.2px;
   cursor: pointer;
@@ -108,6 +113,8 @@
   transition:
     transform 0.13s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
     box-shadow 0.2s ease;
 }
 
@@ -150,6 +157,15 @@ kbd.kbd-hint {
   transform: translateY(1px);
 }
 
+.btn:disabled,
+.btn:disabled:hover {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.35);
+  box-shadow: none;
+}
+
 .btn.primary {
   background: linear-gradient(180deg, var(--accent-2), var(--accent));
   color: #1b1304;
@@ -165,15 +181,21 @@ kbd.kbd-hint {
 }
 
 .btn.coop {
-  background: var(--coop);
-  color: #06281c;
   flex: 1;
+  background: linear-gradient(180deg, #6cd3a0, var(--coop));
+  color: #052a1d;
+  box-shadow:
+    0 8px 20px -10px rgba(87, 192, 138, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .btn.defect {
-  background: var(--defect);
-  color: #2a0b0b;
   flex: 1;
+  background: linear-gradient(180deg, #ea7163, var(--defect));
+  color: #fff1ee;
+  box-shadow:
+    0 8px 20px -10px rgba(223, 93, 78, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .btn.ghost {
@@ -182,22 +204,46 @@ kbd.kbd-hint {
   border: 1px solid var(--border);
 }
 
+.btn.ghost:hover {
+  border-color: var(--border-2);
+  background: var(--panel-hi);
+}
+
+/* 보조 CTA — 골드 아웃라인. primary(솔리드 골드)와 위계를 나눠 한 화면에
+   금색 버튼이 둘 경쟁하지 않게 한다 (타이틀의 "안개의 세계" 등). */
+.btn.secondary {
+  background: transparent;
+  border: 1px solid rgba(230, 179, 74, 0.5);
+  color: var(--accent-2);
+}
+
+.btn.secondary:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.btn.block {
+  width: 100%;
+}
+
 .btn.small {
-  padding: 6px 12px;
-  font-size: 13px;
+  min-height: var(--btn-h-sm);
+  padding: 0 var(--s-3);
+  font-size: var(--fs-sm);
+  border-radius: var(--r-sm);
 }
 
 .stage-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--s-3);
 }
 
 .stage-card {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 6px 14px;
+  gap: var(--s-2) var(--s-4);
   text-align: left;
   cursor: pointer;
   transition:
@@ -260,7 +306,7 @@ kbd.kbd-hint {
 .play {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--s-4);
 }
 
 .play-head {
@@ -278,7 +324,7 @@ kbd.kbd-hint {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--s-1);
   text-align: center;
 }
 
@@ -299,15 +345,15 @@ kbd.kbd-hint {
 
 .scoreboard {
   display: flex;
-  gap: 12px;
+  gap: var(--s-3);
 }
 
 .sb {
   flex: 1;
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px;
+  border-radius: var(--r-md);
+  padding: var(--s-3);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -331,22 +377,22 @@ kbd.kbd-hint {
 .round-feedback {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: var(--r-md);
+  padding: var(--s-3);
 }
 
 .flip-badge {
   background: rgba(248, 113, 113, 0.15);
   color: var(--defect);
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   padding: 6px 10px;
   font-size: 12px;
-  margin-bottom: 8px;
+  margin-bottom: var(--s-2);
 }
 
 .rf-row {
   display: flex;
-  gap: 16px;
+  gap: var(--s-4);
   align-items: center;
 }
 
@@ -386,7 +432,17 @@ kbd.kbd-hint {
 
 .actions {
   display: flex;
-  gap: 12px;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+/* 버튼이 하나뿐인 액션 줄은 가로를 꽉 채워 좌측에 외롭게 뜨는 어색함을 없앤다 */
+.actions > .btn:only-child {
+  flex: 1 1 100%;
+}
+
+.actions.stack {
+  flex-direction: column;
 }
 
 .result-card {
@@ -395,7 +451,7 @@ kbd.kbd-hint {
 }
 
 .result-card h2 {
-  margin: 0 0 12px;
+  margin: 0 0 var(--s-3);
 }
 
 .result-card .stars {
@@ -405,7 +461,7 @@ kbd.kbd-hint {
 .result-score {
   font-size: 20px;
   color: var(--text-h);
-  margin: 12px 0 4px;
+  margin: var(--s-3) 0 var(--s-1);
 }
 
 .result-flips {
@@ -418,9 +474,9 @@ kbd.kbd-hint {
   color: var(--text);
   line-height: 1.6;
   background: var(--bg);
-  border-radius: 10px;
-  padding: 14px;
-  margin: 16px 0;
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  margin: var(--s-4) 0;
   text-align: left;
 }
 
@@ -429,8 +485,8 @@ kbd.kbd-hint {
   line-height: 1.7;
   text-align: left;
   border-left: 3px solid var(--accent);
-  padding-left: 14px;
-  margin: 0 0 16px;
+  padding-left: var(--s-4);
+  margin: 0 0 var(--s-4);
 }
 
 /* --- 게이미피케이션 비주얼 --- */
@@ -470,7 +526,7 @@ kbd.kbd-hint {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: var(--s-4);
   font-size: 30px;
   min-height: 44px;
 }
@@ -482,13 +538,13 @@ kbd.kbd-hint {
 .scorebar {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--s-1);
 }
 
 .scorebar-track {
   display: flex;
   height: 14px;
-  border-radius: 7px;
+  border-radius: var(--r-pill);
   overflow: hidden;
   background: var(--border);
 }
@@ -520,7 +576,7 @@ kbd.kbd-hint {
 .trust {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--s-1);
 }
 
 .trust-head {
@@ -532,7 +588,7 @@ kbd.kbd-hint {
 
 .trust-track {
   height: 10px;
-  border-radius: 5px;
+  border-radius: var(--r-pill);
   overflow: hidden;
   background: var(--border);
 }
@@ -591,7 +647,7 @@ kbd.kbd-hint {
   padding: 4px 16px;
   border-radius: 999px;
   font-weight: 700;
-  margin: 4px 0 8px;
+  margin: var(--s-1) 0 var(--s-2);
 }
 
 .outcome-win {
@@ -619,7 +675,7 @@ kbd.kbd-hint {
   z-index: 100;
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   padding: 6px 10px;
   cursor: pointer;
   font-size: 16px;
@@ -629,7 +685,7 @@ kbd.kbd-hint {
 .welfare {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--s-1);
 }
 
 .welfare-top {
@@ -657,7 +713,7 @@ kbd.kbd-hint {
 
 .welfare-track {
   height: 12px;
-  border-radius: 6px;
+  border-radius: var(--r-pill);
   background: var(--border);
   overflow: hidden;
 }
@@ -847,7 +903,7 @@ kbd.kbd-hint {
   width: 100%;
   height: auto;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: var(--bg);
   display: block;
   box-shadow: var(--shadow-sm);
@@ -856,8 +912,8 @@ kbd.kbd-hint {
 .evo-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 12px 0;
+  gap: var(--s-3);
+  margin: var(--s-3) 0;
   font-size: 12px;
   color: var(--text);
 }
@@ -865,7 +921,7 @@ kbd.kbd-hint {
 .evo-item {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--s-1);
 }
 
 .evo-dot {
@@ -879,11 +935,11 @@ kbd.kbd-hint {
 .analysis {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--s-1);
   background: var(--bg);
-  border-radius: 10px;
-  padding: 12px;
-  margin: 12px 0;
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  margin: var(--s-3) 0;
 }
 
 .analysis-style {
@@ -906,7 +962,7 @@ kbd.kbd-hint {
   align-items: center;
   justify-content: center;
   z-index: 200;
-  padding: 16px;
+  padding: var(--s-4);
   animation: view-in 0.2s ease;
 }
 
@@ -916,26 +972,26 @@ kbd.kbd-hint {
 }
 
 .modal h2 {
-  margin: 0 0 12px;
+  margin: 0 0 var(--s-3);
 }
 
 .rules-intro {
   font-size: 14px;
   color: var(--text);
-  margin: 0 0 12px;
+  margin: 0 0 var(--s-3);
 }
 
 .payoff-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 12px 0;
+  margin: var(--s-3) 0;
   font-size: 13px;
 }
 
 .payoff-table th,
 .payoff-table td {
   border: 1px solid var(--border);
-  padding: 8px;
+  padding: var(--s-2);
   text-align: center;
 }
 
@@ -959,15 +1015,24 @@ kbd.kbd-hint {
 }
 
 .title-card .actions {
+  margin-top: var(--s-6);
+}
+
+/* 타이틀의 보조 링크(규칙 보기) — 스택 아래 가볍게 가운데 */
+.title-rules {
+  margin-top: var(--s-3);
+}
+
+.result-card .actions {
   justify-content: center;
-  flex-wrap: wrap;
+  margin-top: var(--s-5);
 }
 
 .intro-banner {
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
+  border-radius: var(--r-md);
+  padding: var(--s-3) var(--s-4);
   color: var(--text);
   font-size: 13px;
   line-height: 1.5;
@@ -978,7 +1043,7 @@ kbd.kbd-hint {
 .predict-bar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s-2);
   align-items: center;
 }
 
@@ -990,7 +1055,7 @@ kbd.kbd-hint {
 
 .predict-btns {
   display: flex;
-  gap: 12px;
+  gap: var(--s-3);
   width: 100%;
 }
 
@@ -1026,7 +1091,7 @@ kbd.kbd-hint {
 .commit-area {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--s-2);
 }
 
 /* 빨리감기 — 정체를 간파한 무반응 상대의 남은 턴을 한 번에 */
@@ -1036,7 +1101,7 @@ kbd.kbd-hint {
   align-items: center;
   gap: 3px;
   width: 100%;
-  padding: 11px 16px;
+  padding: var(--s-3) var(--s-4);
   background: transparent;
   border: 1px dashed var(--accent);
   color: var(--accent);
@@ -1081,11 +1146,11 @@ kbd.kbd-hint {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: var(--s-3);
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px 28px 14px;
+  border-radius: var(--r-lg);
+  padding: var(--s-6) var(--s-6) var(--s-4);
   box-shadow: var(--shadow);
 }
 
@@ -1093,8 +1158,8 @@ kbd.kbd-hint {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding-bottom: 16px;
+  gap: var(--s-5);
+  padding-bottom: var(--s-4);
 }
 
 .rv-card {
@@ -1125,7 +1190,7 @@ kbd.kbd-hint {
   align-items: center;
   justify-content: center;
   gap: 2px;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   border: 1px solid var(--border);
   background: var(--panel);
 }
@@ -1211,7 +1276,7 @@ kbd.kbd-hint {
   right: -8px;
   transform: rotate(8deg);
   border: 2px solid;
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   padding: 3px 10px;
   font-size: 13px;
   font-weight: 800;
@@ -1266,7 +1331,7 @@ kbd.kbd-hint {
 .predict-area {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s-2);
   align-items: center;
 }
 
@@ -1324,7 +1389,7 @@ kbd.kbd-hint {
   max-width: 46%;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 12px 12px 12px 2px;
+  border-radius: var(--r-md) var(--r-md) var(--r-md) 2px;
   padding: 6px 10px;
   font-size: 12px;
   color: var(--text-h);
@@ -1359,10 +1424,10 @@ kbd.kbd-hint {
 .amend-badge {
   background: rgba(52, 211, 153, 0.15);
   color: var(--coop);
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   padding: 6px 10px;
   font-size: 12px;
-  margin-bottom: 8px;
+  margin-bottom: var(--s-2);
 }
 
 /* --- 텔 배지 --- */
@@ -1439,18 +1504,18 @@ kbd.kbd-hint {
 .builder-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--s-4);
 }
 
 .builder-name-row {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s-2);
 }
 
 .glyph-picker {
   display: flex;
-  gap: 6px;
+  gap: var(--s-2);
   flex-wrap: wrap;
 }
 
@@ -1458,7 +1523,7 @@ kbd.kbd-hint {
   font-size: 18px;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   padding: 4px 8px;
   cursor: pointer;
 }
@@ -1472,7 +1537,7 @@ kbd.kbd-hint {
 .persona-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 8px;
+  gap: var(--s-2);
 }
 
 .persona-card {
@@ -1483,8 +1548,8 @@ kbd.kbd-hint {
   text-align: left;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 12px;
+  border-radius: var(--r-md);
+  padding: var(--s-3);
   cursor: pointer;
   transition:
     transform 0.12s ease,
@@ -1525,9 +1590,9 @@ kbd.kbd-hint {
 .stance-banner {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  border-radius: 10px;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
   background: rgba(230, 179, 74, 0.08);
   border: 1px solid var(--border);
 }
@@ -1553,15 +1618,15 @@ kbd.kbd-hint {
 }
 
 .tune-header {
-  margin-top: 4px;
+  margin-top: var(--s-1);
   opacity: 0.85;
 }
 
 .name-input {
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  padding: var(--s-2) var(--s-3);
   color: var(--text-h);
   font-size: 15px;
   font-weight: 700;
@@ -1570,7 +1635,7 @@ kbd.kbd-hint {
 .slot {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--s-2);
 }
 
 .slot-title {
@@ -1582,7 +1647,7 @@ kbd.kbd-hint {
 .slot-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 8px;
+  gap: var(--s-2);
 }
 
 .rule-card {
@@ -1592,8 +1657,8 @@ kbd.kbd-hint {
   text-align: left;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 8px 10px;
+  border-radius: var(--r-md);
+  padding: var(--s-2) var(--s-3);
   cursor: pointer;
 }
 
@@ -1617,8 +1682,8 @@ kbd.kbd-hint {
   background: rgba(230, 179, 74, 0.12);
   border: 1px solid rgba(230, 179, 74, 0.4);
   color: var(--accent);
-  border-radius: 10px;
-  padding: 10px 12px;
+  border-radius: var(--r-md);
+  padding: var(--s-3);
   font-size: 13px;
   animation: view-in 0.25s ease;
 }
@@ -1626,13 +1691,13 @@ kbd.kbd-hint {
 .spar {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--s-2);
 }
 
 .spar-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--s-3);
 }
 
 .spar-label {
@@ -1652,7 +1717,7 @@ kbd.kbd-hint {
 .evo-gate {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--s-3);
 }
 
 .evo-gate-strategy {
@@ -1670,7 +1735,7 @@ kbd.kbd-hint {
 .evo-gate-btns {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s-2);
 }
 
 .evo-item.mine {
@@ -1680,10 +1745,10 @@ kbd.kbd-hint {
 
 .evo-verdict {
   position: relative;
-  margin: 12px 0;
+  margin: var(--s-3) 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s-2);
   align-items: flex-start;
 }
 
@@ -1708,10 +1773,10 @@ kbd.kbd-hint {
 }
 
 .evo-cta {
-  margin: 12px 0;
+  margin: var(--s-3) 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s-2);
   align-items: flex-start;
 }
 
@@ -1727,7 +1792,7 @@ kbd.kbd-hint {
 /* ===================== 안개의 세계 (피벗 모드) ===================== */
 
 .title-mode-hint {
-  margin: 16px 0 0;
+  margin: var(--s-4) 0 0;
   font-size: 13px;
   color: var(--text);
   opacity: 0.8;
@@ -1739,11 +1804,11 @@ kbd.kbd-hint {
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(230, 179, 74, 0.08), transparent 70%),
     var(--panel);
-  margin-bottom: 16px;
+  margin-bottom: var(--s-4);
 }
 
 .clue-list {
-  margin: 10px 0 14px;
+  margin: var(--s-3) 0 var(--s-4);
   padding-left: 18px;
   line-height: 1.8;
   color: var(--text-h);
@@ -1756,12 +1821,12 @@ kbd.kbd-hint {
 .world-params {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: var(--s-2) var(--s-4);
   font-size: 12.5px;
   color: var(--text);
   opacity: 0.85;
   border-top: 1px dashed var(--border);
-  padding-top: 12px;
+  padding-top: var(--s-3);
 }
 
 /* 조우 진행 헤더 */
@@ -1771,9 +1836,9 @@ kbd.kbd-hint {
   justify-content: space-between;
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 16px;
-  margin-bottom: 14px;
+  border-radius: var(--r-md);
+  padding: var(--s-3) var(--s-4);
+  margin-bottom: var(--s-4);
   font-size: 14px;
 }
 
@@ -1790,17 +1855,17 @@ kbd.kbd-hint {
 /* 조우 리스트 — 안개 낀 칸이 공개되며 승패 색이 든다 */
 .encounter-list {
   display: grid;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
 }
 
 .encounter-card {
   display: grid;
   grid-template-columns: 36px 1fr auto auto;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 10px;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
   border: 1px solid var(--border);
   background: var(--panel);
   transition: filter 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
@@ -1869,12 +1934,12 @@ kbd.kbd-hint {
 
 /* 효율 미터 — 절대 점수가 아니라 "최선 대비 몇 %"를 보여준다 */
 .efficiency-meter {
-  margin: 16px 0;
+  margin: var(--s-4) 0;
 }
 
 .eff-bar {
   height: 14px;
-  border-radius: 7px;
+  border-radius: var(--r-pill);
   background: var(--bg);
   border: 1px solid var(--border);
   overflow: hidden;
@@ -1883,13 +1948,13 @@ kbd.kbd-hint {
 .eff-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--defect), #fbbf24 55%, var(--coop));
-  border-radius: 7px 0 0 7px;
+  border-radius: var(--r-pill) 0 0 var(--r-pill);
   transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .eff-label {
   display: block;
-  margin-top: 8px;
+  margin-top: var(--s-2);
   font-size: 14px;
   color: var(--text);
 }
@@ -1901,11 +1966,11 @@ kbd.kbd-hint {
 
 .score-breakdown {
   display: flex;
-  gap: 16px;
+  gap: var(--s-4);
   justify-content: center;
   flex-wrap: wrap;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: var(--s-3);
 }
 
 .score-breakdown strong {
@@ -1921,15 +1986,15 @@ kbd.kbd-hint {
   text-align: center;
   font-size: 15px;
   color: var(--text-h);
-  margin: 6px 0 14px;
+  margin: var(--s-2) 0 var(--s-4);
 }
 
 .best-stance {
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 14px;
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  margin-bottom: var(--s-4);
   text-align: center;
 }
 
@@ -1947,7 +2012,7 @@ kbd.kbd-hint {
 }
 
 .stance-summary + .hint {
-  margin-top: 8px;
+  margin-top: var(--s-2);
 }
 
 /* --- 안개 읽기 베팅 (조우 게임화) --- */
@@ -1955,9 +2020,9 @@ kbd.kbd-hint {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: var(--s-3);
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: var(--s-4);
   transition: border-color 0.25s ease;
 }
 
@@ -2002,7 +2067,7 @@ kbd.kbd-hint {
 }
 
 .fog-bet-actions {
-  margin-top: 4px;
+  margin-top: var(--s-1);
 }
 
 .enc-opp-reveal {
@@ -2012,12 +2077,12 @@ kbd.kbd-hint {
 }
 
 .enc-trace {
-  margin: 4px 0;
+  margin: var(--s-1) 0;
 }
 
 .fog-score-row {
   display: flex;
-  gap: 18px;
+  gap: var(--s-4);
   align-items: center;
   font-size: 14px;
 }
@@ -2031,7 +2096,7 @@ kbd.kbd-hint {
   text-align: center;
   font-size: 13px;
   color: var(--accent);
-  margin: 4px 0 10px;
+  margin: var(--s-1) 0 var(--s-3);
 }
 
 /* ===================== 데이터/숫자는 모노로 =====================

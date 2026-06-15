@@ -37,9 +37,12 @@ export function TitleScreen({
     <div className="screen center">
       <div className="card title-card">
         <h1>신뢰의 게임</h1>
-        <p>
-          협력할까, 배신할까? 상대를 차례로 만나며 신뢰가 어떻게 쌓이고 무너지는지 직접
-          느껴보세요.
+        <p className="title-tagline">
+          협력할까, 배신할까. 한 번의 선택이 신뢰를 쌓고, 또 무너뜨린다.
+        </p>
+        <p className="title-intro">
+          누굴 믿을지, 겪어봐야 안다. 일곱 상대를 차례로 만나 협력과 배신 사이에서 서로를
+          시험하고, 안개 속 정체 모를 상대의 다음 수를 읽어 최대 수확에 도전하세요.
         </p>
         <div className="actions stack">
           <button className="btn primary block" onClick={onStart}>

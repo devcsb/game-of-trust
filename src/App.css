@@ -95,6 +95,23 @@
   line-height: 1.6;
 }
 
+/* 태그라인 — 편집형 세리프로 한 박자 끌고, 소개는 한 단계 죽여 위계를 만든다 */
+.title-card .title-tagline {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--text-h);
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+  margin: 0 0 var(--s-3);
+}
+
+.title-card .title-intro {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0 0 var(--s-5);
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
